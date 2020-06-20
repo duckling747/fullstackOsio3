@@ -4,7 +4,7 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
-let notes = [
+let persons = [
     {
         name: "Arto",
         number: "021341234",
@@ -22,6 +22,12 @@ let notes = [
     }
 ]
 
+function getRand(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 const PORT = 3001
 
 app.listen(PORT, () => {
@@ -34,26 +40,43 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(notes)
+    response.json(persons)
 })
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const note = notes.find(note => note.id === id)
+    const note = persons.find(note => note.id === id)
     if (note) response.json(note)
     else response.status(404).end()
 })
 
 app.get('/info', (request, response) => {
     response.send(`
-        <p>Phonebook has info on ${notes.length} people</p>
+        <p>Phonebook has info on ${persons.length} people</p>
         <p>${new Date()}</p>
     `)
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
+    persons = persons.filter(note => note.id !== id)
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    if (!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'name or number missing'
+        })
+    }
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: getRand(0, 1000000),
+    }
+
+    persons = persons.concat(person)
+    response.json(person)
 })
 
