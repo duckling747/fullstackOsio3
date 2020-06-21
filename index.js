@@ -48,11 +48,6 @@ app.listen(PORT, () => {
     console.log(`Server running (port ${PORT})...`)
 })
 
-app.get('/', (request, response) => {
-    response.send('<div>Welcome to server! '
-    + 'Try "http://localhost:3001/api/persons"</div>')
-})
-
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
