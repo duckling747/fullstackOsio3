@@ -1,12 +1,10 @@
 require('dotenv').config()
 const express = require('express')
+const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
-const Note = require('./models/person')
-const person = require('./models/person')
+const Person = require('./models/person')
 
-
-const app = express()
 app.use(express.json())
 
 morgan.token('bodydata', (request, response) => {
@@ -23,24 +21,6 @@ app.use(cors())
 
 app.use(express.static('build'))
 
-let persons = [
-    {
-        name: "Arto",
-        number: "021341234",
-        id: 1
-    },
-    {
-        name: "Ada",
-        number: "5324523452345",
-        id: 2
-    },
-    {
-        name: "Dan",
-        number: "99988899",
-        id: 3
-    }
-]
-
 function getRand(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -54,8 +34,12 @@ app.listen(PORT, () => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(person.find({}))
-    // response.json(persons)
+    Person.find({})
+        .then(persons => {
+            //console.log(persons)
+            //persons.forEach(p => console.log('testin ' + p))
+            response.json(persons)
+        })
 })
 
 app.get('/api/persons/:id', (request, response) => {
