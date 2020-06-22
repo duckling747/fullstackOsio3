@@ -1,6 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const Note = require('./models/person')
+const person = require('./models/person')
 
 
 const app = express()
@@ -44,14 +47,15 @@ function getRand(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 
 app.listen(PORT, () => {
     console.log(`Server running (port ${PORT})...`)
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    response.json(person.find({}))
+    // response.json(persons)
 })
 
 app.get('/api/persons/:id', (request, response) => {
