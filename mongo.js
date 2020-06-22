@@ -49,4 +49,5 @@ case 5:{
 }
 default:
   console.log("example: \"node mongo.js yourpassword Anna 040-1234556\"");
+  mongoose.connection.close();
 }
